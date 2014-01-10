@@ -37,4 +37,4 @@ result=`echo "${result}" \
 
 
 # print result
-echo -e "${result}"
+echo -e "${result}" | sed -e 's/\&amp;/\&/g' -e 's/\&gt;/</g' -e 's/\&lt;/</g' -e "s/\&apos;/'/g" -e 's/\&quot;/"/g'
