@@ -26,15 +26,19 @@ result=`echo "${result}" \
 	| tr '\n' '\t' \
 	| sed -e 's/<plaintext>/\'$'\n<plaintext>/g' \
 	| grep -oE "<plaintext>.*</plaintext>|<pod title=.[^\']*" \
-	| sed 's!<plaintext>!!g; \
+	| sed -e 's!<plaintext>!!g; \
 		s!</plaintext>!!g; \
 		s!<pod title=.*!\\\x1b[1;36m&\\\x1b[0m!g; \
 		s!<pod title=.!!g; \
-		s!\&amp;!\&!' \
+		s!\&amp;!\&!g; \
+		s!\&lt;!<!g; \
+		s!\&gt;!>!g; \
+		s!\&quot;!"!g' \
+		-e "s/\&apos;/'/g" \
 	| tr '\t' '\n' \
 	| sed  '/^$/d; \
-		s/\ \ */\ /g'`
-
+		s/\ \ */\ /g; \
+		s/\\\:/\\\u/g'`
 
 # print result
-echo -e "${result}" | sed -e 's/\&amp;/\&/g' -e 's/\&gt;/</g' -e 's/\&lt;/</g' -e "s/\&apos;/'/g" -e 's/\&quot;/"/g'
+echo -e "${result}"
